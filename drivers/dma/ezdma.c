@@ -38,7 +38,7 @@
 #include <linux/cdev.h>
 #include <linux/wait.h>
 
-#include <linux/amba/xilinx_dma.h>  // hacky
+#include <linux/dma/xilinx_dma.h>  // hacky
 
 #define EZDMA_DEV_NAME_MAX_CHARS (16)
 
@@ -701,10 +701,10 @@ static int ezdma_configure_dma_device( struct ezdma_drvdata * p_info )
     cfg.coalesc = 1;    // Leave as default value.
     cfg.delay = 0;      // Disable IRQDelay interrupt.
 
-    rv = dmaengine_device_control(
+    //printk( KERN_ERR KBUILD_MODNAME ": device %x %x\n", p_info->chan->device, p_info->chan->device->device_config);
+    rv = dmaengine_slave_config(
             p_info->chan,
-            DMA_SLAVE_CONFIG,
-            (unsigned long)&cfg);
+            (struct dma_slave_config *) &cfg );
 
     return rv;
 }
